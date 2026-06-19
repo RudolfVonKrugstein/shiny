@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/list
 import gleam/string
 import types/alignment.{type Alignment, Center, Left}
@@ -6,13 +7,18 @@ import ui/progress.{progress_bar}
 import utils/misc.{print_at}
 import utils/text.{align_text, get_box_chars}
 
-pub fn draw_box(x: Int, y: Int, width: Int, height: Int, style: BoxStyle) -> Nil {
+pub fn draw_box(
+  x: Int,
+  y: Int,
+  width: Int,
+  height: Int,
+  style: BoxStyle,
+) -> Nil {
   let #(tl, tr, bl, br, h, v) = get_box_chars(style)
 
   print_at(tl <> string.repeat(h, width - 2) <> tr, x, y)
 
-  list.range(1, height - 2)
-  |> list.each(fn(row) {
+  int.range(1, height - 2, with: Nil, run: fn(_, row) {
     print_at(v, x, y + row)
     print_at(v, x + width - 1, y + row)
   })
@@ -51,8 +57,9 @@ pub fn fill_box(
   fill_char: String,
 ) -> Nil {
   let fill_line = string.repeat(fill_char, width)
-  list.range(0, height - 1)
-  |> list.each(fn(row) { print_at(fill_line, x, y + row) })
+  int.range(0, height - 1, with: Nil, run: fn(_, row) {
+    print_at(fill_line, x, y + row)
+  })
 }
 
 pub fn draw_text_in_box(
